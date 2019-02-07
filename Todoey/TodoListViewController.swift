@@ -11,9 +11,18 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Milk", "Buy Eggos", "Destroy Demogorgon"]
+    let defaults = UserDefaults.standard              // new object ***********************
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        // retrive gemt itemArray ***************
+        
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+            itemArray = items
+        }
+        
     }
     
     //MARK - Tableview Datasource Methods
@@ -52,6 +61,7 @@ class TodoListViewController: UITableViewController {
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
+
         
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         
@@ -61,8 +71,11 @@ class TodoListViewController: UITableViewController {
     
             print("Success")
             print(textField.text!)
+            if textField.text != "" {
             self.itemArray.append(textField.text!)
             self.tableView.reloadData()
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")    // gem data **************
+            }
         }
         
         alert.addTextField { (alertTextField) in
